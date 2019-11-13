@@ -23,7 +23,6 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:lock="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/com_auth0_lock_header_background"
     style="@style/Lock.Theme.Widget.Header"
@@ -34,8 +33,6 @@
         android:id="@+id/com_auth0_lock_header_logo"
         style="@style/Lock.Theme.Widget.Logo"
         android:layout_marginTop="@dimen/com_auth0_lock_header_vertical_margin"
-        android:fitsSystemWindows="false"
-        lock:srcCompat="?attr/Auth0.HeaderLogo"
         tools:ignore="MissingPrefix"
         tools:srcCompat="@drawable/com_auth0_lock_header_logo" />
 

@@ -1,16 +1,17 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    apply from: 'dependencies.gradle'
+
     repositories {
-        jcenter()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
         google()
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.2'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+        classpath pluginDeps.gradle
+        classpath pluginDeps.bintray
     }
 }
 
@@ -18,7 +19,8 @@ allprojects {
     group = 'com.auth0.android'
     
     repositories {
-        jcenter()
         google()
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+        jcenter()
     }
 }

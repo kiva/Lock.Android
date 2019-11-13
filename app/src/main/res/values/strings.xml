@@ -14,4 +14,10 @@
     <string name="hint_country">Country name</string>
     <string name="hint_phone">Phone Number</string>
     <string name="hint_date">Your birthday</string>
+
+    <!-- strings that overwrite Auth0 defaults -->
+    <string name="com_auth0_lock_action_sign_up">Create Account</string>
+    <string name="com_auth0_lock_action_log_in">Sign In</string>
+    <string name="com_auth0_lock_mode_sign_up">Create Account</string>
+    <string name="com_auth0_lock_mode_log_in">Sign In</string>
 </resources>

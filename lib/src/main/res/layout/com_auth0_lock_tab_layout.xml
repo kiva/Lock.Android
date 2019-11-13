@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.design.widget.TabLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.google.android.material.tabs.TabLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/com_auth0_lock_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabBackground="@drawable/com_auth0_lock_tab"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         app:tabMode="fixed"
-        app:tabIndicatorColor="@color/com_auth0_lock_text"
+        app:tabTextAppearance="@style/Lock.Theme.TextAppearance.Tab"
+        app:tabSelectedTextColor="@color/com_auth0_lock_tab_underline"
+        app:tabIndicatorColor="@color/com_auth0_lock_tab_underline"
+        app:tabBackground="?backgroundColor"
         app:tabIndicatorHeight="@dimen/com_auth0_lock_widget_tab_strip_height"
-        app:tabPaddingEnd="0dp"
-        app:tabPaddingStart="0dp"/>
+        app:tabPaddingEnd="8dp"
+        app:tabPaddingStart="8dp"/>
 </LinearLayout>

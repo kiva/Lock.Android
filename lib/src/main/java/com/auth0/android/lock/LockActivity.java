@@ -31,13 +31,16 @@ import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.OnApplyWindowInsetsListener;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -137,7 +140,7 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
 
         setContentView(R.layout.com_auth0_lock_activity_lock);
         resultMessage = findViewById(R.id.com_auth0_lock_result_message);
-        ScrollView rootView = findViewById(R.id.com_auth0_lock_content);
+        final ScrollView rootView = findViewById(R.id.com_auth0_lock_content);
         lockView = new ClassicLockView(this, lockBus, options.getTheme());
         RelativeLayout.LayoutParams lockViewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         lockView.setLayoutParams(lockViewParams);
@@ -146,7 +149,61 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
         loginErrorBuilder = new LoginErrorMessageBuilder(R.string.com_auth0_lock_db_login_error_message, R.string.com_auth0_lock_db_login_error_invalid_credentials_message);
         signUpErrorBuilder = new SignUpErrorMessageBuilder();
 
+        // draw behind window
+        rootView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+        // Keep a record of the intended bottom padding of the view
+        final int bottomPadding = getResources().getDimensionPixelSize(R.dimen.com_auth0_lock_action_button_labeled_vertical_margin);
+        final int topPadding = lockView.getPaddingTop();
+        final int resultMessageTopPadding = resultMessage.getPaddingTop();
+        // apply padding for window insets
+        ViewCompat.setOnApplyWindowInsetsListener(lockView, new OnApplyWindowInsetsListener() {
+            @Override
+            public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
+                if (lockView.getActionButton() != null) {
+                    rootView.setPadding(
+                            rootView.getPaddingLeft(),
+                            topPadding + insets.getSystemWindowInsetTop(),
+                            rootView.getPaddingRight(),
+                            rootView.getPaddingBottom()
+                    );
+                    resultMessage.setPadding(
+                            resultMessage.getPaddingLeft(),
+                            resultMessageTopPadding + insets.getSystemWindowInsetTop(),
+                            resultMessage.getPaddingRight(),
+                            resultMessage.getPaddingBottom()
+                    );
+                    final View view = lockView.getActionButton().findViewById(R.id.com_auth0_lock_labeled);
+                    view.setPadding(
+                            view.getPaddingLeft(),
+                            view.getPaddingTop(),
+                            view.getPaddingRight(),
+                            bottomPadding + insets.getSystemWindowInsetBottom());
+                }
+                return insets;
+            }
+        });
+        applyInsetsWhenAttached(rootView);
+
         lockBus.post(new FetchApplicationEvent());
+    }
+
+    private void applyInsetsWhenAttached(View view) {
+        if (view.isAttachedToWindow()) {
+            view.requestApplyInsets();
+        } else {
+            view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                @Override
+                public void onViewAttachedToWindow(View v) {
+                    v.requestApplyInsets();
+                    v.removeOnAttachStateChangeListener(this);
+                }
+
+                @Override
+                public void onViewDetachedFromWindow(View v) {
+                    v.removeOnAttachStateChangeListener(this);
+                }
+            });
+        }
     }
 
     private boolean hasValidLaunchConfig() {
@@ -169,7 +226,7 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
 
     private boolean hasValidTheme() {
         TypedArray a = getTheme().obtainStyledAttributes(R.styleable.Lock_Theme);
-        boolean validTheme = a.hasValue(R.styleable.Lock_Theme_Auth0_HeaderLogo);
+        boolean validTheme = a.hasValue(R.styleable.Lock_Theme_Auth0_HeaderBackground);
         a.recycle();
         return validTheme;
     }

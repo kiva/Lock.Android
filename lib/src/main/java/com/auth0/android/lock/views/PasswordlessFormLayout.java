@@ -26,8 +26,8 @@ package com.auth0.android.lock.views;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -40,6 +40,7 @@ import com.auth0.android.lock.R;
 import com.auth0.android.lock.adapters.Country;
 import com.auth0.android.lock.internal.configuration.PasswordlessMode;
 import com.auth0.android.lock.views.interfaces.LockWidgetPasswordless;
+import com.google.android.material.textview.MaterialTextView;
 
 public class PasswordlessFormLayout extends LinearLayout implements PasswordlessInputCodeFormView.OnCodeResendListener {
 
@@ -90,7 +91,7 @@ public class PasswordlessFormLayout extends LinearLayout implements Passwordless
     }
 
     private void addSeparator() {
-        orSeparatorMessage = new LineSpacingTextView(getContext());
+        orSeparatorMessage = new TextView(getContext());
         int passwordlessMode = lockWidget.getConfiguration().getPasswordlessMode();
         int stringRes = R.string.com_auth0_lock_passwordless_email_forms_separator;
         if (passwordlessMode == PasswordlessMode.SMS_LINK || passwordlessMode == PasswordlessMode.SMS_CODE) {

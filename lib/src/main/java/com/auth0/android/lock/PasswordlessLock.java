@@ -29,9 +29,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.StyleRes;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.util.Log;
 
 import com.auth0.android.Auth0;
@@ -145,11 +146,15 @@ public class PasswordlessLock {
 
     private void processEvent(Context context, Intent data) {
         LocalBroadcastManager.getInstance(context).unregisterReceiver(this.receiver);
+        if (data == null || data.getAction() == null) {
+            return;
+        }
+
         String action = data.getAction();
         switch (action) {
             case Constants.AUTHENTICATION_ACTION:
                 Log.v(TAG, "AUTHENTICATION action received in our BroadcastReceiver");
-                if (data.getExtras().containsKey(Constants.ERROR_EXTRA)) {
+                if (data.getExtras() != null && data.getExtras().containsKey(Constants.ERROR_EXTRA)) {
                     callback.onError(new LockException(data.getStringExtra(Constants.ERROR_EXTRA)));
                 } else {
                     callback.onEvent(LockEvent.AUTHENTICATION, data);
