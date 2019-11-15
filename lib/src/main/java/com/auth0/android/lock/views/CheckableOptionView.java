@@ -25,13 +25,16 @@
 package com.auth0.android.lock.views;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.ColorInt;
+import androidx.core.content.ContextCompat;
 
 import com.auth0.android.lock.R;
 
@@ -42,6 +45,16 @@ public class CheckableOptionView extends LinearLayout {
 
     private boolean mandatory;
     private boolean checked;
+
+    @ColorInt
+    private int successColor;
+    @ColorInt
+    private int errorColor;
+    @ColorInt
+    private int neutralColor;
+    private ColorStateList successTint;
+    private ColorStateList errorTint;
+    private ColorStateList neutralTint;
 
     public CheckableOptionView(Context context) {
         super(context);
@@ -62,6 +75,21 @@ public class CheckableOptionView extends LinearLayout {
         final View v = inflate(getContext(), R.layout.com_auth0_lock_checkable_option, this);
         icon = v.findViewById(R.id.com_auth0_lock_checkable_text_icon);
         description = v.findViewById(R.id.com_auth0_lock_checkable_text_description);
+        successColor = ContextCompat.getColor(getContext(), R.color.com_auth0_lock_checkable_option_success);
+        errorColor = ContextCompat.getColor(getContext(), R.color.com_auth0_lock_checkable_option_error);
+        neutralColor = ContextCompat.getColor(getContext(), R.color.com_auth0_lock_normal_text);
+        successTint = new ColorStateList(
+                new int[][]{new int[]{android.R.attr.state_enabled}},
+                new int[]{successColor}
+        );
+        errorTint = new ColorStateList(
+                new int[][]{new int[]{android.R.attr.state_enabled}},
+                new int[]{errorColor}
+        );
+        neutralTint = new ColorStateList(
+                new int[][]{new int[]{android.R.attr.state_enabled}},
+                new int[]{neutralColor}
+        );
 
         if (attrs == null) {
             return;
@@ -78,11 +106,13 @@ public class CheckableOptionView extends LinearLayout {
     private void updateStatus() {
         if (checked) {
             icon.setImageResource(R.drawable.com_auth0_lock_ic_check_success);
-            description.setTextColor(ContextCompat.getColor(getContext(), R.color.com_auth0_lock_checkable_option_success));
+            icon.setImageTintList(successTint);
+            description.setTextColor(successColor);
             return;
         }
         icon.setImageResource(mandatory ? R.drawable.com_auth0_lock_ic_check_error : R.drawable.com_auth0_lock_ic_check_unset);
-        description.setTextColor(ContextCompat.getColor(getContext(), mandatory ? R.color.com_auth0_lock_checkable_option_error : R.color.com_auth0_lock_normal_text));
+        icon.setImageTintList(mandatory ? errorTint : neutralTint);
+        description.setTextColor(mandatory ? errorColor : neutralColor);
     }
 
     /**
