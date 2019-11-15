@@ -37,4 +37,7 @@
     <color name="com_auth0_lock_input_field_border_error">@color/color_error</color>
     <color name="com_auth0_lock_validation_error_text">@color/color_error</color>
     <color name="com_auth0_lock_text">@color/color_on_background</color>
+    <color name="com_auth0_lock_checkable_option_success">@color/color_primary</color>
+    <color name="com_auth0_lock_checkable_option_error">@color/color_error</color>
+    <color name="com_auth0_lock_normal_text">@color/color_on_background</color>
 </resources>
