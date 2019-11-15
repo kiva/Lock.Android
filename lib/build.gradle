@@ -23,11 +23,11 @@ oss {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion versions.compileSdk
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 28
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
         versionCode 1
         versionName project.version
         consumerProguardFiles '../proguard/proguard-gson.pro', '../proguard/proguard-otto.pro', '../proguard/proguard-lock-2.pro'
@@ -41,19 +41,22 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
-    implementation 'com.android.support:support-v4:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.squareup.okhttp:okhttp:2.7.5'
-    implementation 'com.squareup:otto:1.3.8'
-    api 'com.auth0.android:auth0:1.18.0'
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.hamcrest:hamcrest-library:1.3'
-    testImplementation 'org.robolectric:robolectric:4.0.2'
-    testImplementation 'org.mockito:mockito-core:1.10.19'
-    testImplementation 'com.squareup.okhttp3:mockwebserver:3.9.1'
-    testImplementation 'com.jayway.awaitility:awaitility:1.7.0'
-    testImplementation 'com.android.support.test.espresso:espresso-intents:3.0.2'
+    api auth.auth0
+
+    implementation androidDeps.appCompat
+    implementation androidDeps.recyclerview
+    implementation androidDeps.material
+    implementation androidDeps.broadcast
+
+    implementation libraryDeps.okhttp
+    implementation libraryDeps.otto
+    implementation libraryDeps.gson
+
+    testImplementation testDeps.junit
+    testImplementation testDeps.hamcrest
+    testImplementation testDeps.robolectric
+    testImplementation testDeps.mockito
+    testImplementation testDeps.mockwebserver
+    testImplementation testDeps.awaitility
+    testImplementation testDeps.espresso
 }

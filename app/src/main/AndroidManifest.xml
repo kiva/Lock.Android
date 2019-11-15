@@ -30,7 +30,7 @@
             android:label="Classic Lock"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/MyLock.Theme"/>
+            android:theme="@style/MyLock.Theme.Customized"/>
         <!--Auth0 Lock End-->
 
         <!--Auth0 PasswordlessLock-->

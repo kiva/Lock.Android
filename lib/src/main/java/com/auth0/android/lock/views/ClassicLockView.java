@@ -29,10 +29,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -132,7 +132,7 @@ public class ClassicLockView extends LinearLayout implements LockWidgetForm {
             addView(bottomBanner, wrapHeightParams);
         }
 
-        actionButton = new ActionButton(getContext(), lockTheme);
+        actionButton = getActionButton();
         actionButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,6 +168,14 @@ public class ClassicLockView extends LinearLayout implements LockWidgetForm {
         } else if (configuration.allowForgotPassword() && configuration.getInitialScreen() == InitialScreen.FORGOT_PASSWORD) {
             showChangePasswordForm(true);
         }
+    }
+
+    // expose so that we may set insets correctly
+    public ActionButton getActionButton() {
+        if (actionButton == null) {
+            actionButton = new ActionButton(getContext(), lockTheme);
+        }
+        return actionButton;
     }
 
     /**

@@ -27,22 +27,20 @@ package com.auth0.android.lock.views;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.auth0.android.lock.R;
 import com.auth0.android.lock.internal.configuration.AuthMode;
+import com.google.android.material.tabs.TabLayout;
 
 @SuppressLint("ViewConstructor")
 public class ModeSelectionView extends LinearLayout implements TabLayout.OnTabSelectedListener {
 
     private final ModeSelectedListener callback;
     private TabLayout tabLayout;
-    private View firstTabView;
-    private View secondTabView;
 
     public ModeSelectionView(Context context, @NonNull ModeSelectedListener listener) {
         super(context);
@@ -54,44 +52,46 @@ public class ModeSelectionView extends LinearLayout implements TabLayout.OnTabSe
         inflate(getContext(), R.layout.com_auth0_lock_tab_layout, this);
         tabLayout = findViewById(R.id.com_auth0_lock_tab_layout);
 
-        firstTabView = inflate(getContext(), R.layout.com_auth0_lock_tab, null);
-        secondTabView = inflate(getContext(), R.layout.com_auth0_lock_tab, null);
-
         final TabLayout.Tab firstTab = tabLayout.newTab()
-                .setCustomView(firstTabView)
                 .setText(R.string.com_auth0_lock_mode_log_in);
+        firstTab.setTag(AuthMode.LOG_IN);
         final TabLayout.Tab secondTab = tabLayout.newTab()
-                .setCustomView(secondTabView)
                 .setText(R.string.com_auth0_lock_mode_sign_up);
-
-        firstTabView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setSelectedMode(AuthMode.LOG_IN);
-            }
-        });
-        secondTabView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setSelectedMode(AuthMode.SIGN_UP);
-            }
-        });
+        secondTab.setTag(AuthMode.SIGN_UP);
 
         tabLayout.addTab(firstTab);
         tabLayout.addTab(secondTab);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                setSelectedMode((int) tab.getTag());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
     }
 
     public void setSelectedMode(@AuthMode int mode) {
-        TabLayout.Tab tab = tabLayout.getTabAt(mode);
-        tab.select();
-        toggleBoldText(firstTabView, mode == AuthMode.LOG_IN);
-        toggleBoldText(secondTabView, mode == AuthMode.SIGN_UP);
+        toggleBoldText(mode);
         callback.onModeSelected(mode);
     }
 
-    private void toggleBoldText(View tabView, boolean bold) {
-        final TextView text = tabView.findViewById(android.R.id.text1);
-        text.setTypeface(bold ? text.getTypeface() : null, bold ? Typeface.BOLD : Typeface.NORMAL);
+    private void toggleBoldText(@AuthMode int mode) {
+        final int count = tabLayout.getTabCount();
+        for (int i = 0; i < count; i++) {
+            final TabLayout.Tab tab = tabLayout.getTabAt(i);
+            if (tab != null) {
+                boolean selected = (int) tab.getTag() == mode;
+                final TextView text = (TextView) tab.view.getChildAt(1);
+                text.setTypeface(Typeface.defaultFromStyle(selected ? Typeface.BOLD : Typeface.NORMAL));
+            }
+        }
     }
 
     @Deprecated

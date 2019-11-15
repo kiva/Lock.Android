@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--DARK COLOR THEME-->
+    <!--The same color values are defined for dark theme, but with values more appropriate for -->
+    <!--low-luminance UIs. These colors will be used by night/themes.xml.-->
+    <color name="color_primary">#60B699</color>
+    <color name="color_secondary">#17FFFFFF</color>
+    <color name="color_background">#121212</color>
+    <color name="color_background_dark">#121212</color>
+    <color name="color_surface">#121212</color>
+    <color name="color_error">#CF6679</color>
+
+    <color name="color_on_primary">#121212</color>
+    <color name="color_on_secondary">#121212</color>
+    <color name="color_on_background">#ffffff</color>
+    <color name="color_on_surface">#ffffff</color>
+    <color name="color_on_error">#121212</color>
+    <color name="color_background_secondary">#17FFFFFF</color>
+    <color name="color_background_tertiary">#1FFFFFFF</color>
+
+    <!-- overwriting lock colors -->
+    <color name="com_auth0_lock_input_field_background">@color/color_background</color>
+    <color name="com_auth0_lock_input_field_background_disabled">@color/color_background</color>
+    <color name="com_auth0_lock_input_field_border_normal">@color/color_background_secondary</color>
+    <color name="com_auth0_lock_terms_background_focused">@color/color_background_tertiary</color>
+    <color name="com_auth0_lock_terms_background">@color/color_background_secondary</color>
+    <color name="com_auth0_lock_terms_text">@color/color_on_surface</color>
+    <color name="com_auth0_lock_input_field_border_error">@color/color_error</color>
+    <color name="com_auth0_lock_validation_error_text">@color/color_error</color>
+    <color name="com_auth0_lock_text">@color/color_on_background</color>
+    <color name="com_auth0_lock_result_message_error_background">@color/color_error</color>
+</resources>

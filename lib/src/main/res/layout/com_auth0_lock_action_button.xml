@@ -56,7 +56,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:scaleType="fitCenter"
-            android:src="@drawable/com_auth0_lock_ic_chevron_submit"
+            android:src="@drawable/ic_arrow_right"
+            android:tint="@color/com_auth0_lock_chevron_right"
             tools:ignore="MissingPrefix" />
     </LinearLayout>
 
