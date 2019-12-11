@@ -141,16 +141,22 @@ public class PasswordlessLock {
         filter.addAction(Constants.AUTHENTICATION_ACTION);
         filter.addAction(Constants.CANCELED_ACTION);
         filter.addAction(Constants.INVALID_CONFIGURATION_ACTION);
+        filter.addAction(Constants.PROVIDER_SELECTED_ACTION);
         LocalBroadcastManager.getInstance(context).registerReceiver(this.receiver, filter);
     }
 
     private void processEvent(Context context, Intent data) {
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(this.receiver);
         if (data == null || data.getAction() == null) {
+            LocalBroadcastManager.getInstance(context).unregisterReceiver(this.receiver);
             return;
         }
 
         String action = data.getAction();
+
+        if (!action.equals(Constants.PROVIDER_SELECTED_ACTION)) {
+            LocalBroadcastManager.getInstance(context).unregisterReceiver(this.receiver);
+        }
+
         switch (action) {
             case Constants.AUTHENTICATION_ACTION:
                 Log.v(TAG, "AUTHENTICATION action received in our BroadcastReceiver");
@@ -167,6 +173,10 @@ public class PasswordlessLock {
             case Constants.INVALID_CONFIGURATION_ACTION:
                 Log.v(TAG, "INVALID_CONFIGURATION_ACTION action received in our BroadcastReceiver");
                 callback.onError(new LockException(data.getStringExtra(Constants.ERROR_EXTRA)));
+                break;
+            case Constants.PROVIDER_SELECTED_ACTION:
+                Log.v(TAG, "PROVIDER_SELECTED action received in our BroadcastReceiver");
+                callback.onEvent(LockEvent.SELECT_PROVIDER, data);
                 break;
         }
     }

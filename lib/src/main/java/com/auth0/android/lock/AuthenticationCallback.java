@@ -27,6 +27,8 @@ package com.auth0.android.lock;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.auth0.android.result.Credentials;
 
 
@@ -37,6 +39,13 @@ import com.auth0.android.result.Credentials;
 public abstract class AuthenticationCallback implements LockCallback {
 
     private static final String TAG = AuthenticationCallback.class.getSimpleName();
+
+    /**
+     * Called when the user selects a provider for authentication, i.e. "google"
+     *
+     * @param providerName the internal name of the {@link com.auth0.android.provider.AuthProvider}
+     */
+    public abstract void onProviderSelected(@Nullable String providerName);
 
     /**
      * Called when the authentication flow finished successfully.
@@ -62,6 +71,9 @@ public abstract class AuthenticationCallback implements LockCallback {
             case LockEvent.RESET_PASSWORD:
             case LockEvent.SIGN_UP:
                 break;
+            case LockEvent.SELECT_PROVIDER:
+                parseProviderName(data);
+                break;
         }
     }
 
@@ -80,5 +92,12 @@ public abstract class AuthenticationCallback implements LockCallback {
 
         Log.d(TAG, "User authenticated!");
         onAuthentication(credentials);
+    }
+
+    private void parseProviderName(Intent data) {
+        String providerName = data.getStringExtra(Constants.PROVIDER_NAME_EXTRA);
+
+        Log.d(TAG, "User selected: " + providerName);
+        onProviderSelected(providerName);
     }
 }

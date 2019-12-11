@@ -30,6 +30,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -283,6 +285,11 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     private LockCallback callback = new AuthenticationCallback() {
+        @Override
+        public void onProviderSelected(@Nullable String providerName) {
+            Log.d("DemoActivity", "Selected provider: " + providerName);
+        }
+
         @Override
         public void onAuthentication(Credentials credentials) {
             showResult("OK > " + credentials.getAccessToken());
