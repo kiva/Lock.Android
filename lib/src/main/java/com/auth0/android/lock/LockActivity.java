@@ -288,6 +288,13 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
         finish();
     }
 
+    private void deliverProviderName(String name) {
+        Intent intent = new Intent(Constants.PROVIDER_SELECTED_ACTION);
+        intent.putExtra(Constants.PROVIDER_NAME_EXTRA, name);
+
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
     private void showSuccessMessage(String message) {
         resultMessage.setBackgroundColor(ContextCompat.getColor(this, R.color.com_auth0_lock_result_message_success_background));
         resultMessage.setVisibility(View.VISIBLE);
@@ -380,6 +387,7 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
     @Subscribe
     public void onOAuthAuthenticationRequest(OAuthLoginEvent event) {
         final String connection = event.getConnection();
+        deliverProviderName(connection);
 
         if (event.useActiveFlow()) {
             lockView.showProgress(true);
@@ -437,6 +445,7 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
             return;
         }
 
+        deliverProviderName("database");
         lockView.showProgress(true);
         lastDatabaseLogin = event;
         AuthenticationAPIClient apiClient = options.getAuthenticationAPIClient();
@@ -470,6 +479,7 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
             return;
         }
 
+        deliverProviderName("database");
         AuthenticationAPIClient apiClient = options.getAuthenticationAPIClient();
         final String connection = configuration.getDatabaseConnection().getName();
         lockView.showProgress(true);

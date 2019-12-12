@@ -35,6 +35,7 @@ import java.lang.annotation.RetentionPolicy;
 import static com.auth0.android.lock.LockCallback.LockEvent.AUTHENTICATION;
 import static com.auth0.android.lock.LockCallback.LockEvent.CANCELED;
 import static com.auth0.android.lock.LockCallback.LockEvent.RESET_PASSWORD;
+import static com.auth0.android.lock.LockCallback.LockEvent.SELECT_PROVIDER;
 import static com.auth0.android.lock.LockCallback.LockEvent.SIGN_UP;
 
 /**
@@ -45,13 +46,14 @@ public interface LockCallback {
      * Type of Events that Lock can notified of.
      */
     @SuppressWarnings("UnnecessaryInterfaceModifier")
-    @IntDef({CANCELED, AUTHENTICATION, SIGN_UP, RESET_PASSWORD})
+    @IntDef({CANCELED, AUTHENTICATION, SIGN_UP, RESET_PASSWORD, SELECT_PROVIDER})
     @Retention(RetentionPolicy.SOURCE)
     public @interface LockEvent {
         int CANCELED = 0;
         int AUTHENTICATION = 1;
         int SIGN_UP = 2;
         int RESET_PASSWORD = 3;
+        int SELECT_PROVIDER = 4;
     }
 
     /**
