@@ -3,6 +3,8 @@ package com.auth0.android.lock;
 import android.app.Activity;
 import android.content.Intent;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.auth0.android.Auth0;
 import com.auth0.android.authentication.AuthenticationAPIClient;
 import com.auth0.android.authentication.request.DatabaseConnectionRequest;
@@ -57,7 +59,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.atLeastO
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 21)
+@Config(sdk = 23)
 public class LockActivityTest {
 
     private static final int REQ_CODE_WEB_PROVIDER = 200;
@@ -79,6 +81,8 @@ public class LockActivityTest {
     Configuration configuration;
     @Mock
     ClassicLockView lockView;
+    @Mock
+    LocalBroadcastManager broadcastManager;
     @Captor
     ArgumentCaptor<Map> mapCaptor;
     LockActivity activity;
@@ -112,7 +116,7 @@ public class LockActivityTest {
         when(connection.getName()).thenReturn("connection");
         when(configuration.getDatabaseConnection()).thenReturn(connection);
 
-        activity = new LockActivity(configuration, options, lockView, webProvider);
+        activity = new LockActivity(configuration, options, lockView, webProvider, broadcastManager);
     }
 
     @Test
@@ -181,7 +185,7 @@ public class LockActivityTest {
         when(options.getScope()).thenReturn("openid user photos");
         when(options.getAudience()).thenReturn("aud");
         when(options.getAuthenticationParameters()).thenReturn(basicParameters);
-        LockActivity activity = new LockActivity(configuration, options, lockView, webProvider);
+        LockActivity activity = new LockActivity(configuration, options, lockView, webProvider, broadcastManager);
 
         DatabaseLoginEvent event = new DatabaseLoginEvent("username", "password");
         event.setVerificationCode("123456");
@@ -213,7 +217,7 @@ public class LockActivityTest {
         when(options.getScope()).thenReturn("openid user photos");
         when(options.getAudience()).thenReturn("aud");
         when(options.getAuthenticationParameters()).thenReturn(basicParameters);
-        LockActivity activity = new LockActivity(configuration, options, lockView, webProvider);
+        LockActivity activity = new LockActivity(configuration, options, lockView, webProvider, broadcastManager);
 
         DatabaseLoginEvent event = new DatabaseLoginEvent("username", "password");
         activity.onDatabaseAuthenticationRequest(event);
@@ -285,7 +289,7 @@ public class LockActivityTest {
         when(options.getAudience()).thenReturn("aud");
         when(options.getScope()).thenReturn("openid user photos");
         when(options.getAuthenticationParameters()).thenReturn(basicParameters);
-        LockActivity activity = new LockActivity(configuration, options, lockView, webProvider);
+        LockActivity activity = new LockActivity(configuration, options, lockView, webProvider, broadcastManager);
 
         when(configuration.loginAfterSignUp()).thenReturn(true);
 
@@ -437,7 +441,7 @@ public class LockActivityTest {
         when(options.getScope()).thenReturn("openid user photos");
         when(options.getConnectionsScope()).thenReturn(connectionScope);
         when(options.getAuthenticationParameters()).thenReturn(basicParameters);
-        LockActivity activity = new LockActivity(configuration, options, lockView, webProvider);
+        LockActivity activity = new LockActivity(configuration, options, lockView, webProvider, broadcastManager);
 
 
         AuthProvider customProvider = mock(AuthProvider.class);
@@ -473,7 +477,7 @@ public class LockActivityTest {
         when(options.getScope()).thenReturn("openid user photos");
         when(options.getConnectionsScope()).thenReturn(connectionScope);
         when(options.getAuthenticationParameters()).thenReturn(basicParameters);
-        LockActivity activity = new LockActivity(configuration, options, lockView, webProvider);
+        LockActivity activity = new LockActivity(configuration, options, lockView, webProvider, broadcastManager);
 
 
         AuthProvider customProvider = mock(AuthProvider.class);

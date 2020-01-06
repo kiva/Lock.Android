@@ -46,7 +46,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 21)
+@Config(sdk = 23)
 public class EnterpriseConnectionMatcherTest {
 
     private static final String ENTERPRISE_STRATEGY = "adfs";

@@ -24,6 +24,8 @@
 
 package com.auth0.android.lock.utils;
 
+import androidx.annotation.Nullable;
+
 import com.auth0.android.lock.AuthenticationCallback;
 import com.auth0.android.result.Credentials;
 
@@ -34,6 +36,7 @@ public class MockLockCallback extends AuthenticationCallback {
     private Credentials credentials;
     private boolean canceled;
     private LockException error;
+    private String providerName;
 
     public Callable<Credentials> authentication() {
         return new Callable<Credentials>() {
@@ -62,6 +65,11 @@ public class MockLockCallback extends AuthenticationCallback {
                 return error;
             }
         };
+    }
+
+    @Override
+    public void onProviderSelected(@Nullable String providerName) {
+        this.providerName = providerName;
     }
 
     @Override

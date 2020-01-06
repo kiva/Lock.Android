@@ -19,7 +19,7 @@ ext {
             mockwebserver: '3.9.1',
             awaitility: '1.7.0',
             espresso: '3.1.0',
-            robolectric: '4.0.2',
+            robolectric: '4.3.1',
             broadcast: '1.0.0',
     ]
 

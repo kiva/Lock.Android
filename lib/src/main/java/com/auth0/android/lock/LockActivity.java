@@ -112,17 +112,19 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
     private LoginErrorMessageBuilder loginErrorBuilder;
     private SignUpErrorMessageBuilder signUpErrorBuilder;
     private DatabaseLoginEvent lastDatabaseLogin;
+    private LocalBroadcastManager broadcastManager;
 
     @SuppressWarnings("unused")
     public LockActivity() {
     }
 
     @VisibleForTesting
-    LockActivity(Configuration configuration, Options options, ClassicLockView lockView, WebProvider webProvider) {
+    LockActivity(Configuration configuration, Options options, ClassicLockView lockView, WebProvider webProvider, LocalBroadcastManager localBroadcastManager) {
         this.configuration = configuration;
         this.options = options;
         this.lockView = lockView;
         this.webProvider = webProvider;
+        this.broadcastManager = localBroadcastManager;
     }
 
     @Override
@@ -137,6 +139,7 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
         lockBus.register(this);
         handler = new Handler(getMainLooper());
         webProvider = new WebProvider(options);
+        broadcastManager = LocalBroadcastManager.getInstance(this);
 
         setContentView(R.layout.com_auth0_lock_activity_lock);
         resultMessage = findViewById(R.id.com_auth0_lock_result_message);
@@ -292,7 +295,7 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
         Intent intent = new Intent(Constants.PROVIDER_SELECTED_ACTION);
         intent.putExtra(Constants.PROVIDER_NAME_EXTRA, name);
 
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        broadcastManager.sendBroadcast(intent);
     }
 
     private void showSuccessMessage(String message) {
@@ -661,6 +664,4 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
             });
         }
     };
-
-
 }
