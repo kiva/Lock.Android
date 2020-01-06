@@ -43,7 +43,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 21)
+@Config(sdk = 23)
 public class ConnectionTest {
 
     private static final String CONNECTION_NAME = "Username-Password";

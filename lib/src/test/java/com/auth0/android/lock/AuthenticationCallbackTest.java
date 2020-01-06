@@ -44,7 +44,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 21)
+@Config(sdk = 23)
 public class AuthenticationCallbackTest {
 
     private MockLockCallback callback;

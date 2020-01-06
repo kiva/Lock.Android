@@ -65,7 +65,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 21)
+@Config(sdk = 23)
 public class ConfigurationTest extends GsonBaseTest {
 
     private static final String RESTRICTIVE_DATABASE = "RestrictiveDatabase";

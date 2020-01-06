@@ -46,7 +46,7 @@ import java.util.List;
 import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 21)
+@Config(sdk = 23)
 public class ApplicationFetcherTest {
 
     private ApplicationFetcher appFetcher;

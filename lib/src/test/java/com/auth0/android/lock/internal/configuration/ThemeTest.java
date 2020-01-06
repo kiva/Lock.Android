@@ -49,7 +49,7 @@ import static org.junit.Assert.assertThat;
 import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 21)
+@Config(sdk = 23)
 public class ThemeTest {
 
     @StringRes

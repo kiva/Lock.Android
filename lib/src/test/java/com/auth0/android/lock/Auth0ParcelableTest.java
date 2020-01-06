@@ -18,7 +18,7 @@ import static org.junit.Assert.assertThat;
 
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 21)
+@Config(sdk = 23)
 public class Auth0ParcelableTest {
 
     private static final String CLIENT_ID = "CLIENT_ID";
