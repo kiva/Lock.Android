@@ -60,7 +60,8 @@ public class AuthenticationError {
         return message;
     }
 
-    String getCustomMessage() {
+    @Nullable
+    public String getCustomMessage() {
         return customMessage;
     }
 }
