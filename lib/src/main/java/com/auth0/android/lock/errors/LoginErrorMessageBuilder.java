@@ -61,7 +61,7 @@ public class LoginErrorMessageBuilder implements ErrorMessageBuilder<Authenticat
     @Override
     public AuthenticationError buildFrom(AuthenticationException exception) {
         int messageRes;
-        String description = null;
+        String description = exception.getDescription();
 
         if (exception.isInvalidCredentials()) {
             messageRes = invalidCredentialsResource;

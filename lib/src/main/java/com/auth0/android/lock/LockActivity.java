@@ -25,22 +25,14 @@
 package com.auth0.android.lock;
 
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.OnApplyWindowInsetsListener;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -49,6 +41,17 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.OnApplyWindowInsetsListener;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.auth0.android.Auth0;
 import com.auth0.android.authentication.AuthenticationAPIClient;
@@ -93,6 +96,7 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
     private static final String KEY_VERIFICATION_CODE = "mfa_code";
     private static final String KEY_LOGIN_HINT = "login_hint";
     private static final String KEY_MFA_TOKEN = "mfa_token";
+    private static final String FORCE_PASSWORD_RESET_ERROR = "force_password_reset";
     private static final long RESULT_MESSAGE_DURATION = 3000;
     private static final int WEB_AUTH_REQUEST_CODE = 200;
     private static final int CUSTOM_AUTH_REQUEST_CODE = 201;
@@ -322,6 +326,26 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
             resultMessage.setVisibility(View.GONE);
         }
     };
+
+    private void showPasswordResetDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.com_auth0_lock_password_reset_title)
+                .setMessage(R.string.com_auth0_lock_password_reset_message)
+                .setPositiveButton(R.string.com_auth0_lock_password_reset_positive_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (dialog != null) dialog.dismiss();
+                        lockView.showChangePasswordForm(true);
+                    }
+                })
+                .setNegativeButton(R.string.com_auth0_lock_password_reset_negative_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (dialog != null) dialog.dismiss();
+                    }
+                })
+                .show();
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -602,11 +626,21 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
                         lockView.showMFACodeForm(lastDatabaseLogin);
                         return;
                     }
-                    String message = authError.getMessage(LockActivity.this);
-                    showErrorMessage(message);
-                    if (error.isMultifactorTokenInvalid()) {
-                        //The MFA Token has expired. The user needs to log in again. Show the username/password form
-                        onBackPressed();
+                    final String errorDescription = authError.getCustomMessage();
+                    if (errorDescription != null && errorDescription.contains(FORCE_PASSWORD_RESET_ERROR)) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                showPasswordResetDialog();
+                            }
+                        });
+                    } else {
+                        String message = authError.getMessage(LockActivity.this);
+                        showErrorMessage(message);
+                        if (error.isMultifactorTokenInvalid()) {
+                            //The MFA Token has expired. The user needs to log in again. Show the username/password form
+                            onBackPressed();
+                        }
                     }
                 }
             });

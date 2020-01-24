@@ -147,6 +147,10 @@
     <string name="com_auth0_lock_passwordless_login_error_invalid_credentials_message">WRONG IDENTITY OR PASSCODE</string>
     <string name="com_auth0_lock_title_mfa_input_code">Two Step Verification</string>
     <string name="com_auth0_lock_description_mfa_input_code">Please enter a verification code from\n your code generator application.</string>
+    <string name="com_auth0_lock_password_reset_title">Password Reset Required</string>
+    <string name="com_auth0_lock_password_reset_message">It\'s been a while since we\'ve seen you, so you must reset your password.</string>
+    <string name="com_auth0_lock_password_reset_positive_button">Reset Password</string>
+    <string name="com_auth0_lock_password_reset_negative_button">Cancel</string>
 
     <!-- Password Strength/Policies -->
     <string name="com_auth0_lock_password_strength_identical_chars">No more than 2 identical characters in a row (e.g., "111" not allowed)</string>
