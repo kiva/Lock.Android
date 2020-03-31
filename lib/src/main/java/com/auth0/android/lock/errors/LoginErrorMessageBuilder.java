@@ -38,6 +38,7 @@ public class LoginErrorMessageBuilder implements ErrorMessageBuilder<Authenticat
     private static final String USER_IS_BLOCKED_DESCRIPTION = "user is blocked";
     private static final String TOO_MANY_ATTEMPTS_ERROR = "too_many_attempts";
     private static final String WRONG_CLIENT_TYPE_ERROR = "Unauthorized";
+    private static final String FORCE_PASSWORD_RESET_ERROR = "force_password_reset";
 
     private static final int userExistsResource = R.string.com_auth0_lock_db_signup_user_already_exists_error_message;
     private static final int unauthorizedResource = R.string.com_auth0_lock_db_login_error_unauthorized_message;
@@ -61,7 +62,11 @@ public class LoginErrorMessageBuilder implements ErrorMessageBuilder<Authenticat
     @Override
     public AuthenticationError buildFrom(AuthenticationException exception) {
         int messageRes;
-        String description = exception.getDescription();
+        String description = null;
+
+        if (FORCE_PASSWORD_RESET_ERROR.equals(exception.getDescription())) {
+            description = exception.getDescription();
+        }
 
         if (exception.isInvalidCredentials()) {
             messageRes = invalidCredentialsResource;
