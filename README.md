@@ -29,7 +29,7 @@ Android API Level 15+ is required in order to use Lock's UI.
 Lock is available both in [Maven Central](http://search.maven.org) and [JCenter](https://bintray.com/bintray/jcenter). To start using *Lock* add these lines to your `build.gradle` dependencies file:
 
 ```gradle
-implementation 'com.auth0.android:lock:2.18.0'
+implementation 'com.auth0.android:lock:2.20.0'
 ```
 
 #### Android SDK Versions Troubleshooting
@@ -128,8 +128,6 @@ Auth0 account = new Auth0("{YOUR_AUTH0_CLIENT_ID}", "{YOUR_AUTH0_DOMAIN}");
 account.setOIDCConformant(true);
 //Use the account to launch Lock
 ```
-
-Passwordless Lock *cannot be used* with this flag set to `true`. For more information, please see the [OIDC adoption guide](https://auth0.com/docs/api-auth/tutorials/adoption).
 
 
 ### Email/Password, Enterprise & Social authentication
@@ -235,7 +233,7 @@ startActivity(lock.newIntent(this));
 
 ### Passwordless & Social authentication
 
-The Passwordless feature requires your Application to have the *Resource Owner* Legacy Grant Type enabled. Check [this article](https://auth0.com/docs/clients/client-grant-types) to learn how to enable it. Note that Passwordless authentication *cannot be used* with the [OIDC Conformant Mode](#oidc-conformant-mode) enabled.
+The Passwordless feature requires your Application to have a specific Grant Type enabled first. If your client has the [OIDC Conformant Mode](#oidc-conformant-mode) enabled, enable the *Passwordless OTP* Grant Type. If the OIDC Conformant mode is disabled, you would need to enable the *Resource Owner* Legacy Grant Type. Check [this article](https://auth0.com/docs/clients/client-grant-types) to learn how to enable it. 
 
 `PasswordlessLockActivity` authenticates users by sending them an Email or SMS (similar to how WhatsApp authenticates you). In order to be able to authenticate the user, your application must have the SMS/Email connection enabled and configured in your [dashboard](https://manage.auth0.com/#/connections/passwordless).
 
