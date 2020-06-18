@@ -9,7 +9,6 @@
         <item name="Auth0.HeaderBackground">@color/color_background_secondary</item>
         <item name="Auth0.DarkPrimaryColor">?colorPrimary</item>
         <item name="Auth0.PrimaryColor">?colorPrimary</item>
-        <item name="Auth0.BackgroundColor">?backgroundColor</item>
         <item name="android:textColorHighlight">?colorOnPrimary</item>
         <item name="android:windowBackground">?backgroundColor</item>
         <item name="android:textColorLink">?colorPrimary</item>
