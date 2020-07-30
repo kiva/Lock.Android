@@ -32,10 +32,10 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Build;
-import androidx.annotation.ColorInt;
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.support.annotation.ColorInt;
+import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
@@ -114,10 +114,10 @@ abstract class ViewUtils {
     }
 
     /**
-     * Generates a rounded outline drawable with the given background color.
+     * Generates a rounded outline drawable with a transparent background.
      *
      * @param resources the context's current resources.
-     * @param color     the color to use as background.
+     * @param color     the color to use for the outline.
      * @return the rounded drawable.
      */
     static ShapeDrawable getRoundedOutlineBackground(Resources resources, @ColorInt int color) {
@@ -132,12 +132,12 @@ abstract class ViewUtils {
     /**
      * Generates a rounded outline drawable with the given background color.
      *
-     * @param resources the context's current resources.
-     * @param backgroundColor the color to use as background.
-     * @param outlineColor the color to use as the outline
-     * @return the rounded drawable.
+     * @param resources       the context's current resources.
+     * @param backgroundColor the color to use for the background.
+     * @param outlineColor    the color to use for the outline
+     * @return the opaque rounded drawable.
      */
-    static GradientDrawable getOpaqueRoundedOutlineBackground(
+    static Drawable getOpaqueRoundedOutlineBackground(
             Resources resources,
             @ColorInt int backgroundColor,
             @ColorInt int outlineColor
