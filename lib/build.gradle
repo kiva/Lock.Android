@@ -15,6 +15,11 @@ android {
     testOptions {
         unitTests {
             includeAndroidResources = true
+            // https://github.com/robolectric/robolectric/issues/5115
+            all {
+                systemProperty("javax.net.ssl.trustStoreType", "JKS")
+                maxHeapSize = "1024m"
+            }
         }
     }
 }

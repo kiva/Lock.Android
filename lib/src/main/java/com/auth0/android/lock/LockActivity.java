@@ -95,6 +95,7 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
     private static final String TAG = LockActivity.class.getSimpleName();
     private static final String KEY_VERIFICATION_CODE = "mfa_code";
     private static final String KEY_LOGIN_HINT = "login_hint";
+    private static final String KEY_SCREEN_HINT = "screen_hint";
     private static final String KEY_MFA_TOKEN = "mfa_token";
     private static final String FORCE_PASSWORD_RESET_ERROR = "force_password_reset";
     private static final long RESULT_MESSAGE_DURATION = 3000;
@@ -116,6 +117,7 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
     private LoginErrorMessageBuilder loginErrorBuilder;
     private SignUpErrorMessageBuilder signUpErrorBuilder;
     private DatabaseLoginEvent lastDatabaseLogin;
+    private DatabaseSignUpEvent lastDatabaseSignUp;
     private LocalBroadcastManager broadcastManager;
 
     @SuppressWarnings("unused")
@@ -129,6 +131,9 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
         this.lockView = lockView;
         this.webProvider = webProvider;
         this.broadcastManager = localBroadcastManager;
+        this.handler = new Handler();
+        this.loginErrorBuilder = new LoginErrorMessageBuilder();
+        this.signUpErrorBuilder = new SignUpErrorMessageBuilder();
     }
 
     @Override
@@ -464,6 +469,27 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
         webProvider.start(this, connection, extraAuthParameters, authProviderCallback, WEB_AUTH_REQUEST_CODE);
     }
 
+    private void completeDatabaseAuthenticationOnBrowser() {
+        //DBConnection checked for nullability before the API call
+        @SuppressWarnings("ConstantConditions")
+        String connection = configuration.getDatabaseConnection().getName();
+
+        String loginHint = null;
+        String screenHint = null;
+        if (lastDatabaseSignUp != null) {
+            loginHint = lastDatabaseSignUp.getEmail();
+            screenHint = "signup";
+        } else if (lastDatabaseLogin != null) {
+            loginHint = lastDatabaseLogin.getUsernameOrEmail();
+            screenHint = "login";
+        }
+        HashMap<String, Object> params = new HashMap<>();
+        params.put(KEY_LOGIN_HINT, loginHint);
+        params.put(KEY_SCREEN_HINT, screenHint);
+
+        webProvider.start(this, connection, params, authProviderCallback, WEB_AUTH_REQUEST_CODE);
+    }
+
     @SuppressWarnings("unused")
     @Subscribe
     public void onDatabaseAuthenticationRequest(DatabaseLoginEvent event) {
@@ -510,6 +536,7 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
         AuthenticationAPIClient apiClient = options.getAuthenticationAPIClient();
         final String connection = configuration.getDatabaseConnection().getName();
         lockView.showProgress(true);
+        lastDatabaseSignUp = event;
 
         if (configuration.loginAfterSignUp()) {
             Map<String, Object> authParameters = new HashMap<>(options.getAuthenticationParameters());
@@ -607,17 +634,22 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
         public void onSuccess(Credentials credentials) {
             deliverAuthenticationResult(credentials);
             lastDatabaseLogin = null;
+            lastDatabaseSignUp = null;
         }
 
         @Override
         public void onFailure(final AuthenticationException error) {
             Log.e(TAG, "Failed to authenticate the user: " + error.getMessage(), error);
+            final AuthenticationError authError = loginErrorBuilder.buildFrom(error);
+            if (error.isVerificationRequired()) {
+                completeDatabaseAuthenticationOnBrowser();
+                return;
+            }
+
             handler.post(new Runnable() {
                 @Override
                 public void run() {
                     lockView.showProgress(false);
-
-                    final AuthenticationError authError = loginErrorBuilder.buildFrom(error);
                     if (error.isMultifactorRequired()) {
                         String mfaToken = (String) error.getValue(KEY_MFA_TOKEN);
                         if (!TextUtils.isEmpty(mfaToken)) {
@@ -656,11 +688,16 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
                     deliverSignUpResult(user);
                 }
             });
+            lastDatabaseSignUp = null;
         }
 
         @Override
         public void onFailure(final AuthenticationException error) {
             Log.e(TAG, "Failed to create the user: " + error.getMessage(), error);
+            if (error.isVerificationRequired()) {
+                completeDatabaseAuthenticationOnBrowser();
+                return;
+            }
             handler.post(new Runnable() {
                 @Override
                 public void run() {
