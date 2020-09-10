@@ -224,7 +224,7 @@ public class LockActivityTest {
         when(options.getAudience()).thenReturn("aud");
         when(options.getAuthenticationParameters()).thenReturn(basicParameters);
 
-        LockActivity activity = new LockActivity(configuration, options, lockView, webProvider);
+        LockActivity activity = new LockActivity(configuration, options, lockView, webProvider, broadcastManager);
         DatabaseLoginEvent event = new DatabaseLoginEvent("john@doe.com", "123456");
         activity.onDatabaseAuthenticationRequest(event);
 
@@ -266,7 +266,7 @@ public class LockActivityTest {
         when(options.loginAfterSignUp()).thenReturn(true);
         when(configuration.loginAfterSignUp()).thenReturn(true);
 
-        LockActivity activity = new LockActivity(configuration, options, lockView, webProvider);
+        LockActivity activity = new LockActivity(configuration, options, lockView, webProvider, broadcastManager);
         DatabaseSignUpEvent event = new DatabaseSignUpEvent("john@doe.com", "123456", "johncito");
         activity.onDatabaseAuthenticationRequest(event);
 
@@ -308,7 +308,7 @@ public class LockActivityTest {
         when(options.loginAfterSignUp()).thenReturn(false);
         when(configuration.loginAfterSignUp()).thenReturn(false);
 
-        LockActivity activity = new LockActivity(configuration, options, lockView, webProvider);
+        LockActivity activity = new LockActivity(configuration, options, lockView, webProvider, broadcastManager);
         DatabaseSignUpEvent event = new DatabaseSignUpEvent("john@doe.com", "123456", "johncito");
         activity.onDatabaseAuthenticationRequest(event);
 
