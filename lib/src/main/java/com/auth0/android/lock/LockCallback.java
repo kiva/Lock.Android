@@ -26,6 +26,7 @@ package com.auth0.android.lock;
 
 import android.content.Intent;
 import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 
 import com.auth0.android.lock.utils.LockException;
 
@@ -62,12 +63,12 @@ public interface LockCallback {
      * @param event to notify of
      * @param data  related to the event.
      */
-    void onEvent(@LockEvent int event, Intent data);
+    void onEvent(@LockEvent int event, @NonNull Intent data);
 
     /**
      * Called when an error is raised by Lock.
      *
      * @param error describing what happened.
      */
-    void onError(LockException error);
+    void onError(@NonNull LockException error);
 }

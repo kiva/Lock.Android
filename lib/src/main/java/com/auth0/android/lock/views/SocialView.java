@@ -50,7 +50,7 @@ import static androidx.recyclerview.widget.RecyclerView.LayoutManager;
 public class SocialView extends LinearLayout implements SocialViewAdapter.OAuthListener {
 
     private static final String TAG = SocialView.class.getSimpleName();
-    private LockWidgetOAuth lockWidget;
+    private final LockWidgetOAuth lockWidget;
     private SocialViewAdapter adapter;
 
     /**
@@ -59,7 +59,8 @@ public class SocialView extends LinearLayout implements SocialViewAdapter.OAuthL
      * @param lockWidget   the main widget context
      * @param smallButtons Deprecated and no longer used. All SocialView widgets will display using large buttons.
      */
-    public SocialView(LockWidgetOAuth lockWidget, boolean smallButtons) {
+    @SuppressLint("LambdaLast")
+    public SocialView(@NonNull LockWidgetOAuth lockWidget, boolean smallButtons) {
         super(lockWidget.getContext());
         this.lockWidget = lockWidget;
         Log.v(TAG, "New instance created. Using small buttons: " + smallButtons);

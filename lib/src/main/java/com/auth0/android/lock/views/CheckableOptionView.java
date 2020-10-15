@@ -26,6 +26,7 @@ package com.auth0.android.lock.views;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import androidx.annotation.NonNull;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
@@ -56,17 +57,17 @@ public class CheckableOptionView extends LinearLayout {
     private ColorStateList errorTint;
     private ColorStateList neutralTint;
 
-    public CheckableOptionView(Context context) {
+    public CheckableOptionView(@NonNull Context context) {
         super(context);
         init(null);
     }
 
-    public CheckableOptionView(Context context, AttributeSet attrs) {
+    public CheckableOptionView(@NonNull Context context, @NonNull AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
     }
 
-    public CheckableOptionView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CheckableOptionView(@NonNull Context context, @NonNull AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }
@@ -120,7 +121,7 @@ public class CheckableOptionView extends LinearLayout {
      *
      * @param text to set.
      */
-    public void setText(String text) {
+    public void setText(@NonNull String text) {
         this.description.setText(text);
     }
 

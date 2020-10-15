@@ -24,6 +24,7 @@
 
 package com.auth0.android.lock.utils;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.auth0.android.lock.AuthenticationCallback;
@@ -73,7 +74,7 @@ public class MockLockCallback extends AuthenticationCallback {
     }
 
     @Override
-    public void onAuthentication(Credentials credentials) {
+    public void onAuthentication(@NonNull Credentials credentials) {
         this.credentials = credentials;
     }
 
@@ -83,7 +84,7 @@ public class MockLockCallback extends AuthenticationCallback {
     }
 
     @Override
-    public void onError(LockException error) {
+    public void onError(@NonNull LockException error) {
         this.error = error;
     }
 

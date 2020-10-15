@@ -25,6 +25,7 @@
 package com.auth0.android.lock;
 
 import android.content.Intent;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -52,7 +53,7 @@ public abstract class AuthenticationCallback implements LockCallback {
      *
      * @param credentials with the tokens.
      */
-    public abstract void onAuthentication(Credentials credentials);
+    public abstract void onAuthentication(@NonNull Credentials credentials);
 
     /**
      * Called when the user goes back and closes the activity, without using an Authentication flow.
@@ -60,7 +61,7 @@ public abstract class AuthenticationCallback implements LockCallback {
     public abstract void onCanceled();
 
     @Override
-    public void onEvent(@LockEvent int event, Intent data) {
+    public void onEvent(@LockEvent int event, @NonNull Intent data) {
         switch (event) {
             case LockEvent.CANCELED:
                 onCanceled();

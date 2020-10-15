@@ -24,8 +24,10 @@
 
 package com.auth0.android.lock.views.interfaces;
 
+import androidx.annotation.NonNull;
+
 public interface IdentityListener {
 
-    void onEmailChanged(String currentValue);
+    void onEmailChanged(@NonNull String currentValue);
 
 }

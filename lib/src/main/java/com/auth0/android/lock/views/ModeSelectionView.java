@@ -42,7 +42,7 @@ public class ModeSelectionView extends LinearLayout implements TabLayout.OnTabSe
     private final ModeSelectedListener callback;
     private TabLayout tabLayout;
 
-    public ModeSelectionView(Context context, @NonNull ModeSelectedListener listener) {
+    public ModeSelectionView(@NonNull Context context, @NonNull ModeSelectedListener listener) {
         super(context);
         this.callback = listener;
         init();
@@ -94,21 +94,21 @@ public class ModeSelectionView extends LinearLayout implements TabLayout.OnTabSe
         }
     }
 
-    @Deprecated
     @Override
-    public void onTabSelected(TabLayout.Tab tab) {
+    @Deprecated
+    public void onTabSelected(@NonNull TabLayout.Tab tab) {
         //No-Op
     }
 
-    @Deprecated
     @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
+    @Deprecated
+    public void onTabUnselected(@NonNull TabLayout.Tab tab) {
         //No-Op
     }
 
-    @Deprecated
     @Override
-    public void onTabReselected(TabLayout.Tab tab) {
+    @Deprecated
+    public void onTabReselected(@NonNull TabLayout.Tab tab) {
         //No-Op
     }
 

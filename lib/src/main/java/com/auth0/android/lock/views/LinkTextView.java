@@ -3,6 +3,7 @@ package com.auth0.android.lock.views;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
@@ -16,17 +17,17 @@ import com.google.android.material.textview.MaterialTextView;
 public class LinkTextView extends MaterialTextView {
     private Drawable focusedBackground;
 
-    public LinkTextView(Context context) {
+    public LinkTextView(@NonNull Context context) {
         super(context);
         init();
     }
 
-    public LinkTextView(Context context, AttributeSet attrs) {
+    public LinkTextView(@NonNull Context context, @NonNull AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public LinkTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public LinkTextView(@NonNull Context context, @NonNull AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }

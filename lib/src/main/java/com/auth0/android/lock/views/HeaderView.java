@@ -28,6 +28,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
@@ -43,7 +44,7 @@ public class HeaderView extends RelativeLayout {
     private ImageView logo;
     private TextView text;
 
-    public HeaderView(Context context, Theme lockTheme) {
+    public HeaderView(@NonNull Context context, @NonNull Theme lockTheme) {
         super(context);
         init(lockTheme);
     }
@@ -73,7 +74,7 @@ public class HeaderView extends RelativeLayout {
      *
      * @param title the title to use
      */
-    public void setTitle(String title) {
+    public void setTitle(@NonNull String title) {
         this.text.setText(title);
     }
 

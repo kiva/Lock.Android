@@ -26,6 +26,7 @@ package com.auth0.android.lock.views;
 
 import android.content.Context;
 import android.os.Build;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import android.util.Log;
@@ -52,12 +53,12 @@ public class PasswordlessFormLayout extends LinearLayout implements Passwordless
     private PasswordlessRequestCodeFormView passwordlessRequestCodeLayout;
     private PasswordlessInputCodeFormView passwordlessInputCodeLayout;
 
-    public PasswordlessFormLayout(Context context) {
+    public PasswordlessFormLayout(@NonNull Context context) {
         super(context);
         lockWidget = null;
     }
 
-    public PasswordlessFormLayout(LockWidgetPasswordless lockWidget) {
+    public PasswordlessFormLayout(@NonNull LockWidgetPasswordless lockWidget) {
         super(lockWidget.getContext());
         this.lockWidget = lockWidget;
         init();
@@ -119,7 +120,7 @@ public class PasswordlessFormLayout extends LinearLayout implements Passwordless
         addView(passwordlessRequestCodeLayout);
     }
 
-    private void addPasswordlessInputCodeLayout(String emailOrNumber) {
+    private void addPasswordlessInputCodeLayout(@NonNull String emailOrNumber) {
         passwordlessInputCodeLayout = new PasswordlessInputCodeFormView(lockWidget, this, emailOrNumber);
         addView(passwordlessInputCodeLayout);
     }
@@ -153,7 +154,7 @@ public class PasswordlessFormLayout extends LinearLayout implements Passwordless
      *
      * @param emailOrNumber the email or phone number to which the code was sent.
      */
-    public void codeSent(String emailOrNumber) {
+    public void codeSent(@NonNull String emailOrNumber) {
         Log.d(TAG, "Now showing the Code Input Form");
         if (passwordlessRequestCodeLayout != null) {
             removeView(passwordlessRequestCodeLayout);
@@ -206,13 +207,13 @@ public class PasswordlessFormLayout extends LinearLayout implements Passwordless
      * @param country  the selected country iso code (2 chars).
      * @param dialCode the dial code for this country
      */
-    public void onCountryCodeSelected(String country, String dialCode) {
+    public void onCountryCodeSelected(@NonNull String country, @NonNull String dialCode) {
         if (passwordlessRequestCodeLayout != null) {
             passwordlessRequestCodeLayout.onCountryCodeSelected(country, dialCode);
         }
     }
 
-    public void loadPasswordlessData(String emailOrNumber, @Nullable Country country) {
+    public void loadPasswordlessData(@NonNull String emailOrNumber, @Nullable Country country) {
         if (passwordlessRequestCodeLayout != null) {
             Log.d(TAG, String.format("Loading recent passwordless data into the form. Identity %s with Country %s", emailOrNumber, country));
             passwordlessRequestCodeLayout.setInputText(emailOrNumber);

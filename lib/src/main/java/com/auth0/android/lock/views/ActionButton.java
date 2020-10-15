@@ -31,6 +31,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
@@ -56,7 +58,7 @@ public class ActionButton extends FrameLayout {
     private TextView title;
     private boolean shouldShowLabel;
 
-    public ActionButton(Context context, Theme lockTheme) {
+    public ActionButton(@NonNull Context context, @NonNull Theme lockTheme) {
         super(context);
         init(lockTheme);
     }

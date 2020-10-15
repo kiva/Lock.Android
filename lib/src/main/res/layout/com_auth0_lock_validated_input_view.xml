@@ -31,6 +31,7 @@
         android:id="@+id/com_auth0_lock_icon"
         style="@style/Lock.Theme.Widget.Icon"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         tools:ignore="MissingPrefix"
         tools:src="@drawable/com_auth0_lock_ic_email" />
 
@@ -46,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:background="@null"
-            tools:ignore="Autofill,TextFields"
+            tools:ignore="Autofill,TextFields,LabelFor"
             tools:text="email@domain.com" />
 
         <com.auth0.android.lock.views.ImageCheckbox
@@ -59,6 +60,7 @@
         android:id="@+id/errorDescription"
         style="@style/Lock.Theme.Text.ValidationError"
         android:layout_below="@+id/com_auth0_lock_icon"
+        tools:ignore="SelectableText"
         tools:text="Invalid Email Address " />
 
     <FrameLayout
