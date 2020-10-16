@@ -12,7 +12,6 @@ ext {
             gson: '2.8.5',
             okhttp: '2.7.5',
             otto: '1.3.8',
-            auth0: '1.25.0',
             junit: '4.12',
             hamcrest: '1.3',
             mockito: '1.10.19',
@@ -49,9 +48,5 @@ ext {
             gson: "com.google.code.gson:gson:$versions.gson",
             okhttp: "com.squareup.okhttp:okhttp:$versions.okhttp",
             otto: "com.squareup:otto:$versions.otto"
-    ]
-
-    auth = [
-            auth0: "com.auth0.android:auth0:$versions.auth0"
     ]
 }

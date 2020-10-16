@@ -30,7 +30,8 @@ android {
 }
 
 dependencies {
-    api auth.auth0
+    debugImplementation project(":auth0-debug")
+    releaseImplementation project(":auth0-release")
 
     implementation androidDeps.appCompat
     implementation androidDeps.recyclerview

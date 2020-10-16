@@ -1,5 +1,6 @@
+include ':auth0-release'
+include ':auth0-debug'
 rootProject.name = 'Lock.Android'
 include ':app'
-
 include ':lock'
 project(':lock').projectDir = new File(rootProject.projectDir, '/lib')
