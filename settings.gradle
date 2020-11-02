@@ -1,3 +1,5 @@
+include ':auth0-debug-local-snapshot-2.29.0'
+include ':auth0-release-local-snapshot-2.29.0'
 rootProject.name = 'Lock.Android'
 include ':app'
 
