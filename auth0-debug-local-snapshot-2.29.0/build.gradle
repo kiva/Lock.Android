@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('auth0-debug-local-snapshot-2.29.0.aar'))

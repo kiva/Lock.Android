@@ -30,7 +30,9 @@ android {
 }
 
 dependencies {
-    api auth.auth0
+    debugApi project(":auth0-debug-local-snapshot-2.29.0")
+    releaseApi project(":auth0-release-local-snapshot-2.29.0")
+    implementation auth.values()
 
     implementation androidDeps.appCompat
     implementation androidDeps.recyclerview
