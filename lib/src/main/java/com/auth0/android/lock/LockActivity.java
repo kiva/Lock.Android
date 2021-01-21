@@ -38,6 +38,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.CookieManager;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -489,6 +490,12 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
         params.put(KEY_LOGIN_HINT, loginHint);
         params.put(KEY_SCREEN_HINT, screenHint);
 
+        if (options.usePrivateBrowsingDuringBotDetectionFlow()) {
+            // disable cookies for the following session
+            final CookieManager manager = CookieManager.getInstance();
+            manager.setAcceptCookie(false);
+        }
+
         webProvider.start(this, connection, params, authProviderCallback, WEB_AUTH_REQUEST_CODE);
     }
 
@@ -605,6 +612,7 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
         @Override
         public void onFailure(@NonNull final Dialog dialog) {
             Log.e(TAG, "Failed to authenticate the user. A dialog is going to be shown with more information.");
+            reenableCookies();
             dialog.show();
             handler.post(new Runnable() {
                 @Override
@@ -618,6 +626,7 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
         public void onFailure(@NonNull final AuthenticationException exception) {
             final AuthenticationError authError = loginErrorBuilder.buildFrom(exception);
             final String message = authError.getMessage(LockActivity.this);
+            reenableCookies();
             Log.e(TAG, "Failed to authenticate the user: " + message, exception);
             handler.post(new Runnable() {
                 @Override
@@ -629,6 +638,7 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
 
         @Override
         public void onSuccess(@NonNull final Credentials credentials) {
+            reenableCookies();
             deliverAuthenticationResult(credentials);
         }
     };
@@ -742,4 +752,9 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
             });
         }
     };
+
+    private void reenableCookies() {
+        final CookieManager manager = CookieManager.getInstance();
+        manager.setAcceptCookie(true);
+    }
 }

@@ -79,6 +79,7 @@ public class Options implements Parcelable {
     private boolean useLabeledSubmitButton;
     private boolean hideMainScreenTitle;
     private boolean rememberLastPasswordlessLogin;
+    private boolean usePrivateBrowsingDuringBotDetectionFlow;
     private String defaultDatabaseConnection;
     private List<String> connections;
     private List<String> enterpriseConnectionsUsingWebForm;
@@ -111,6 +112,7 @@ public class Options implements Parcelable {
         useCodePasswordless = true;
         usePKCE = true;
         useLabeledSubmitButton = true;
+        usePrivateBrowsingDuringBotDetectionFlow = false;
         authenticationParameters = new HashMap<>();
         authStyles = new HashMap<>();
         connectionsScope = new HashMap<>();
@@ -218,6 +220,7 @@ public class Options implements Parcelable {
         dest.writeByte((byte) (useLabeledSubmitButton ? HAS_DATA : WITHOUT_DATA));
         dest.writeByte((byte) (hideMainScreenTitle ? HAS_DATA : WITHOUT_DATA));
         dest.writeByte((byte) (rememberLastPasswordlessLogin ? HAS_DATA : WITHOUT_DATA));
+        dest.writeByte((byte) (usePrivateBrowsingDuringBotDetectionFlow ? HAS_DATA : WITHOUT_DATA));
         dest.writeString(defaultDatabaseConnection);
         dest.writeInt(usernameStyle);
         dest.writeInt(initialScreen);
@@ -539,6 +542,14 @@ public class Options implements Parcelable {
 
     public boolean rememberLastPasswordlessAccount() {
         return rememberLastPasswordlessLogin;
+    }
+
+    public void setUsePrivateBrowsingDuringBotDetectionFlow(boolean usePrivateBrowsing) {
+        this.usePrivateBrowsingDuringBotDetectionFlow = usePrivateBrowsing;
+    }
+
+    public boolean usePrivateBrowsingDuringBotDetectionFlow() {
+        return this.usePrivateBrowsingDuringBotDetectionFlow;
     }
 
     public void withConnectionScope(@NonNull String connectionName, @NonNull String scope) {
