@@ -659,6 +659,19 @@ public class Lock {
         }
 
         /**
+         * Before launching the CAPTCHA flow, logout the user in order to clear previous session data.
+         *
+         * @param shouldClearSession whether or not to logout the user before launching the CAPTCHA
+         *                           flow
+         * @return the current builder instance
+         */
+        @NonNull
+        public Builder setShouldClearSessionBeforeEnteringCaptchaFlow(boolean shouldClearSession) {
+            options.setShouldClearSessionBeforeEnteringCaptchaFlow(shouldClearSession);
+            return this;
+        }
+
+        /**
          * Sets the Connection Scope to request when performing an Authentication with the given Connection.
          *
          * @param connectionName to which specify the scopes.

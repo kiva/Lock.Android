@@ -39,6 +39,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.CookieManager;
+import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -55,6 +56,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.auth0.android.Auth0;
+import com.auth0.android.Auth0Exception;
 import com.auth0.android.authentication.AuthenticationAPIClient;
 import com.auth0.android.authentication.AuthenticationException;
 import com.auth0.android.authentication.ParameterBuilder;
@@ -77,6 +79,7 @@ import com.auth0.android.lock.provider.AuthResolver;
 import com.auth0.android.lock.views.ClassicLockView;
 import com.auth0.android.provider.AuthCallback;
 import com.auth0.android.provider.AuthProvider;
+import com.auth0.android.provider.VoidCallback;
 import com.auth0.android.provider.WebAuthProvider;
 import com.auth0.android.request.AuthenticationRequest;
 import com.auth0.android.request.internal.OkHttpClientFactory;
@@ -474,8 +477,7 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
 
     private void completeDatabaseAuthenticationOnBrowser() {
         //DBConnection checked for nullability before the API call
-        @SuppressWarnings("ConstantConditions")
-        String connection = configuration.getDatabaseConnection().getName();
+        @SuppressWarnings("ConstantConditions") final String connection = configuration.getDatabaseConnection().getName();
 
         String loginHint = null;
         String screenHint = null;
@@ -486,17 +488,28 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
             loginHint = lastDatabaseLogin.getUsernameOrEmail();
             screenHint = "login";
         }
-        HashMap<String, Object> params = new HashMap<>();
+        final HashMap<String, Object> params = new HashMap<>();
         params.put(KEY_LOGIN_HINT, loginHint);
         params.put(KEY_SCREEN_HINT, screenHint);
 
-        if (options.usePrivateBrowsingDuringBotDetectionFlow()) {
+        if (options.shouldClearSessionBeforeEnteringCaptchaFlow()) {
             // disable cookies for the following session
-            final CookieManager manager = CookieManager.getInstance();
-            manager.setAcceptCookie(false);
-        }
+            System.out.println("LOCK_DEBUG -- Logout user from current session");
+            webProvider.logout(this, new VoidCallback() {
+                @Override
+                public void onSuccess(@Nullable Void unused) {
+                    System.out.println("LOCK_DEBUG -- Logout success");
+                    launchCaptcha(connection, params);
+                }
 
-        webProvider.start(this, connection, params, authProviderCallback, WEB_AUTH_REQUEST_CODE);
+                @Override
+                public void onFailure(@NonNull Auth0Exception e) {
+                    System.out.println("LOCK_DEBUG -- Logout failure");
+                    // log this failure but attempt to complete CAPTCHA anyways
+                    launchCaptcha(connection, params);
+                }
+            });
+        }
     }
 
     @Subscribe
@@ -612,7 +625,6 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
         @Override
         public void onFailure(@NonNull final Dialog dialog) {
             Log.e(TAG, "Failed to authenticate the user. A dialog is going to be shown with more information.");
-            reenableCookies();
             dialog.show();
             handler.post(new Runnable() {
                 @Override
@@ -626,7 +638,6 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
         public void onFailure(@NonNull final AuthenticationException exception) {
             final AuthenticationError authError = loginErrorBuilder.buildFrom(exception);
             final String message = authError.getMessage(LockActivity.this);
-            reenableCookies();
             Log.e(TAG, "Failed to authenticate the user: " + message, exception);
             handler.post(new Runnable() {
                 @Override
@@ -638,7 +649,6 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
 
         @Override
         public void onSuccess(@NonNull final Credentials credentials) {
-            reenableCookies();
             deliverAuthenticationResult(credentials);
         }
     };
@@ -753,8 +763,8 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
         }
     };
 
-    private void reenableCookies() {
-        final CookieManager manager = CookieManager.getInstance();
-        manager.setAcceptCookie(true);
+    private void launchCaptcha(@NonNull String connection, @NonNull HashMap<String, Object> params) {
+        Log.d("LOCK_DEBUG", "Launching CAPTCHA");
+        webProvider.start(this, connection, params, authProviderCallback, WEB_AUTH_REQUEST_CODE);
     }
 }

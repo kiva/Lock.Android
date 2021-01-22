@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import com.auth0.android.lock.internal.configuration.Options;
 import com.auth0.android.provider.AuthCallback;
 import com.auth0.android.provider.CustomTabsOptions;
+import com.auth0.android.provider.VoidCallback;
 import com.auth0.android.provider.WebAuthProvider;
 
 import java.util.HashMap;
@@ -99,6 +100,13 @@ class WebProvider {
     public boolean resume(int requestCode, int resultCode, Intent intent) {
         //noinspection deprecation
         return WebAuthProvider.resume(requestCode, resultCode, intent);
+    }
+
+    public void logout(@NonNull Activity activity, @NonNull VoidCallback callback) {
+        final String scheme = options.getScheme() != null ? options.getScheme() : "https";
+        WebAuthProvider.logout(options.getAccount())
+                .withScheme(scheme)
+                .start(activity, callback);
     }
 
 }
