@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('auth0-release-local-snapshot-1.29.0.mfa.aar'))
