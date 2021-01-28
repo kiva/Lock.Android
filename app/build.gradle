@@ -42,4 +42,8 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
     implementation project(':lock')
+
+    debugApi project(":auth0-debug-local-snapshot-1.29.0.mfa")
+    releaseApi project(":auth0-release-local-snapshot-1.29.0.mfa")
+    implementation auth.values()
 }

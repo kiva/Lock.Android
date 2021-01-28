@@ -49,6 +49,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.auth0.android.Auth0;
+import com.auth0.android.Auth0Exception;
 import com.auth0.android.authentication.AuthenticationAPIClient;
 import com.auth0.android.authentication.AuthenticationException;
 import com.auth0.android.authentication.ParameterBuilder;
@@ -73,7 +74,9 @@ import com.auth0.android.provider.AuthCallback;
 import com.auth0.android.provider.AuthProvider;
 import com.auth0.android.provider.WebAuthProvider;
 import com.auth0.android.request.AuthenticationRequest;
+import com.auth0.android.request.ChallengeRequest;
 import com.auth0.android.request.internal.OkHttpClientFactory;
+import com.auth0.android.result.Challenge;
 import com.auth0.android.result.Credentials;
 import com.auth0.android.result.DatabaseUser;
 import com.squareup.okhttp.OkHttpClient;
@@ -84,6 +87,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @SuppressLint("GoogleAppIndexingApiWarning")
 public class LockActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
@@ -113,6 +117,8 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
     private SignUpErrorMessageBuilder signUpErrorBuilder;
     private DatabaseLoginEvent lastDatabaseLogin;
     private DatabaseSignUpEvent lastDatabaseSignUp;
+
+    private Challenge lastChallenge;
 
     @SuppressWarnings("unused")
     public LockActivity() {
@@ -421,8 +427,14 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
                 parameters.put(KEY_VERIFICATION_CODE, event.getVerificationCode());
             }
         } else {
-            //noinspection ConstantConditions
-            request = apiClient.loginWithOTP(event.getMFAToken(), event.getVerificationCode());
+            if (lastChallenge != null && "oob".equals(lastChallenge.getChallengeType()) && lastChallenge.getOobCode() != null) {
+                Log.d(TAG, "Login with OOB");
+                request = apiClient.loginWithOOBCode(lastChallenge.getOobCode(), event.getMFAToken(), event.getVerificationCode());
+            } else {
+                Log.d(TAG, "Login with OTP");
+                //noinspection ConstantConditions
+                request = apiClient.loginWithOTP(event.getMFAToken(), event.getVerificationCode());
+            }
         }
 
         request.addAuthenticationParameters(parameters);
@@ -540,6 +552,18 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
         }
     };
 
+    private final AuthenticationCallback<Challenge> challengeCallback = new AuthenticationCallback<Challenge>() {
+        @Override
+        public void onFailure(@NonNull AuthenticationException e) {
+            Log.w(TAG, "CHALLENGE fail " + e);
+        }
+
+        @Override
+        public void onSuccess(@Nullable Challenge challenge) {
+            Log.w(TAG, "CHALLENGE success " + challenge);
+        }
+    };
+
     private final AuthenticationCallback<Credentials> authCallback = new AuthenticationCallback<Credentials>() {
         @Override
         public void onSuccess(@Nullable Credentials credentials) {
@@ -547,6 +571,7 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
             deliverAuthenticationResult(credentials);
             lastDatabaseLogin = null;
             lastDatabaseSignUp = null;
+            lastChallenge = null;
         }
 
         @Override
@@ -563,12 +588,33 @@ public class LockActivity extends AppCompatActivity implements ActivityCompat.On
                 public void run() {
                     lockView.showProgress(false);
                     if (error.isMultifactorRequired()) {
-                        String mfaToken = (String) error.getValue(KEY_MFA_TOKEN);
-                        if (!TextUtils.isEmpty(mfaToken)) {
-                            //noinspection ConstantConditions
-                            lastDatabaseLogin.setMFAToken(mfaToken);
-                        }
-                        lockView.showMFACodeForm(lastDatabaseLogin);
+
+                        final String mfaToken = (String) error.getValue(KEY_MFA_TOKEN);
+
+                        options.getAuthenticationAPIClient()
+                                .multifactorChallenge(mfaToken)
+                                .start(new AuthenticationCallback<Challenge>() {
+                                    @Override
+                                    public void onFailure(@NonNull AuthenticationException e) {
+                                        Log.w(TAG, "Challenge failed", e);
+                                        lastChallenge = null;
+                                    }
+
+                                    @Override
+                                    public void onSuccess(@Nullable Challenge challenge) {
+                                        lastChallenge = challenge;
+                                        Log.d(TAG, "Challenge success");
+                                        if (!TextUtils.isEmpty(mfaToken)) {
+                                            lastDatabaseLogin.setMFAToken(mfaToken);
+                                        }
+                                        handler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                lockView.showMFACodeForm(lastDatabaseLogin);
+                                            }
+                                        });
+                                    }
+                                });
                         return;
                     }
                     String message = authError.getMessage(LockActivity.this);
